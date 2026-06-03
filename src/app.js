@@ -52,9 +52,9 @@ app.use('/api/analytics', analyticsRoutes);
 app.use('/api', datasetRoutes);
 app.use('/api', healthRoutes);
 
-//catch-all for client-side routing
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
+//catch-all for 404s
+app.use((req, res) => {
+  res.status(404).json({ message: 'Not found', path: req.path });
 });
 
 app.use(errorHandler);
