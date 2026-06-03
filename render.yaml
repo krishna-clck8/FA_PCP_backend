@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: bugtracker-api
+    runtime: node
+    region: oregon
+    buildCommand: npm install
+    startCommand: node src/server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRY
+        value: 7d
+      - key: BASE_URL
+        value: https://t4e-testserver.onrender.com/api
+      - key: STUDENT_ID
+        value: E0123001
+      - key: STUDENT_PASSWORD
+        value: "621147"
+      - key: STUDENT_SET
+        value: setB

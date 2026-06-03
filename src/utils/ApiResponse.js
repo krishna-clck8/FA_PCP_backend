@@ -1,0 +1,25 @@
+class ApiResponse {
+  static success(res, data = null, message = 'Success', statusCode = 200) {
+    return res.status(statusCode).json({
+      success: true,
+      message,
+      data,
+    });
+  }
+
+  static paginated(res, data, total, page, limit, message = 'Success') {
+    return res.status(200).json({
+      success: true,
+      message,
+      data: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+        data,
+      },
+    });
+  }
+}
+
+export default ApiResponse;
