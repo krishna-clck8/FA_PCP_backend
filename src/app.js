@@ -24,16 +24,24 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-//serve frontend static files
+//serve frontend static files (if they exist)
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-app.use(express.static(path.join(__dirname, '../../frontend/dist')));
+const distPath = path.join(__dirname, '../../frontend/dist');
 
-//root route
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
-});
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
+} else {
+  // If frontend not built, just return API message
+  app.get('/', (req, res) => {
+    res.json({ message: 'BugTracker API Server', version: '1.0.0' });
+  });
+}
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
