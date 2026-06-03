@@ -19,6 +19,18 @@ const app = express();
 //use middlewares for the app
 app.use(cors());
 app.use(express.json());
+
+//serve frontend static files
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+app.use(express.static(path.join(__dirname, '../../frontend/dist')));
+
+//root route
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/projects', projectRoutes);
@@ -27,6 +39,12 @@ app.use('/api/comments', commentRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api', datasetRoutes);
 app.use('/api', healthRoutes);
+
+//catch-all for client-side routing
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
+});
+
 app.use(errorHandler);
 
 //export the app for use in the server.js file
