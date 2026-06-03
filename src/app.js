@@ -18,10 +18,26 @@ const app = express();
 
 //use middlewares for the app
 const corsOptions = {
-  origin: ['https://fa-pcp-frontend-g5im.vercel.app', 'http://localhost:5173', 'http://localhost:3000'],
+  origin: function(origin, callback) {
+    const allowedOrigins = [
+      'https://fa-pcp-frontend-g5im.vercel.app',
+      'https://fa-pcp-frontend-01.vercel.app',
+      'http://localhost:5173',
+      'http://localhost:3000'
+    ];
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 };
+
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Handle preflight requests
 app.use(express.json());
 
 //serve frontend static files (if they exist)
