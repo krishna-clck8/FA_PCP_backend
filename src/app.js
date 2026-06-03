@@ -17,7 +17,11 @@ import errorHandler from './middlewares/errorHandler.js';
 const app = express();
 
 //use middlewares for the app
-app.use(cors());
+const corsOptions = {
+  origin: ['https://fa-pcp-frontend-g5im.vercel.app', 'http://localhost:5173', 'http://localhost:3000'],
+  credentials: true,
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 //serve frontend static files
